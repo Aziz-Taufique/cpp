@@ -1,0 +1,132 @@
+Address-of operator(&) :- 
+If we want to access the address of a memory bucket we can use Addres-of operator(&).
+Can we store this address ????? :- Yes, by using pointers.
+pointers can store addresses.
+
+int x = 10;
+cout<<&x<end; // prints address of x;
+
+#####
+
+Dereference operator(*):- 
+we can use *ptr to access actually value stored on the address pointed by ptr.
+
+
+🧩 1. Introduction to Pointers in C++
+🔹 What is a Pointer?
+A pointer is a variable that stores the memory address of another variable.
+int a = 10;
+int* ptr = &a;  // ptr stores address of a
+
+
+🔹 Why Use Pointers?
+Efficient memory access and manipulation
+Dynamic memory allocation
+Function arguments by reference
+Building data structures (linked list, trees, graphs)
+Array and string manipulation
+
+
+🔹 Pointer Syntax
+Concept	        Example	    Meaning
+Declaration    	int* ptr;	Pointer to int
+Initialization	ptr = &a;	Store address of variable a
+Dereferencing	*ptr	    Access value at address
+Address-of	    &a	        Address of variable a
+
+
+🗄️ 2. Data Storage Using Pointers
+Pointers allow us to store and manipulate addresses, enabling access to data indirectly.
+
+
+🔸 How Pointers Store Data
+A pointer stores the memory address of a variable, not the value directly.
+int a = 5;
+int* ptr = &a;  // ptr holds address of a
+
+Variable	Value	    Address
+a	        5	        0x1000
+ptr	        0x1000  	0x2000
+
+So:
+ptr stores &a
+*ptr accesses the value at that address → 5
+
+🔸 Storing Arrays in Pointers
+int arr[3] = {10, 20, 30};
+int* p = arr; // p points to the first element
+cout << *p;     // 10
+cout << *(p+1); // 20
+
+Arrays are stored as contiguous memory blocks. The pointer p can move using pointer arithmetic.
+
+🔸 Dynamic Memory Storage (Heap)
+int* ptr = new int;  // Allocated on heap
+*ptr = 25;           // Store value
+
+Action	    Result
+new int	    Allocates memory from heap
+*ptr = 25	Stores value 25 at that address
+
+Use delete to free heap memory:
+delete ptr;
+
+🔎 3. Accessing Data Using Pointers
+🔸 Direct Access vs. Indirect Access
+Type	    Code	    What it does
+Direct	    a = 5;	    Assign value directly
+Indirect	*ptr = 5;	Assign via pointer
+
+🔸 Access Value of a Variable
+int x = 100;
+int* p = &x;
+cout << *p; // 100
+
+🔸 Modify Value Using Pointers
+*p = 200;
+cout << x; // 200 — changed using pointer
+
+
+🔸 Passing by Pointer to Function
+void increment(int* p) {
+    (*p)++;
+}
+
+int main() {
+    int a = 5;
+    increment(&a);
+    cout << a; // 6
+}
+
+🔸 Accessing Arrays Using Pointers
+int arr[3] = {1, 2, 3};
+int* p = arr;
+
+for (int i = 0; i < 3; i++) {
+    cout << *(p + i) << " ";
+}
+
+
+🔸 Accessing Structures Using Pointers
+struct Student {
+    int id;
+    char name[20];
+};
+
+Student s = {1, "Aziz"};
+Student* ptr = &s;
+
+cout << ptr->id << " " << ptr->name;
+Use -> (arrow operator) with pointers to structures.
+
+✅ Best Practices
+Always initialize pointers (nullptr if nothing).
+Use new / delete carefully to avoid memory leaks.
+Avoid pointer arithmetic unless absolutely needed.
+Use smart pointers (std::unique_ptr, shared_ptr) in modern C++.
+
+📘 Sample Exercise
+int a = 5;
+int* p = &a;
+int** q = &p;
+cout << **q; // Output: 5
