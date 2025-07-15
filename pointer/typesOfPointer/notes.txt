@@ -1,0 +1,17 @@
+types of pointer:-
+
+1 -> wind pointer :-  A wild pointer is a type of pointer where, the user declear the pointer but not initalize it.
+                      Due to this it ends up pointing to some random memeory loc.
+                      Due to this we might get undefined behavior and error. In some cases we might get segmentation fault.
+                      eg:- int *ptr;
+
+
+2 -> NUll pointer :-  if we want to have a pointer variable, which is  just declear but will get address lates to store. we can use null pointer.
+
+eg:-  int *ptr = NULL;
+
+
+3 :- It is a type of pointer that point to memeory location that is not valid.
+
+4 :- void pointer :- these are special pointers that can point to any datatype value.
+                     void pointer cannot be derefrence.
