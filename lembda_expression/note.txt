@@ -1,0 +1,135 @@
+Lembda expression :-
+is a fn without name and non-reusable code.
+one time use fn.
+It is inline fn.
+It can access values and refrence of parent fn variable.
+
+A lambda expression (also called lambda function) is an anonymous function that you can define inline in your code, often used to define small function objects.
+ 
+📌 Syntax of a Lambda Expression
+[capture](parameters) -> return_type {
+    // function body
+};
+
+capture: defines which external variables are available inside the lambda.
+parameters: like function arguments.
+return_type: (optional) specifies return type. If omitted, deduced automatically.
+{...}: function body.
+
+✅ Simple Example
+#include <iostream>
+using namespace std;
+int main() {
+    auto greet = []() {
+        cout << "Hello from lambda!" << endl;
+    };
+
+    greet(); // Output: Hello from lambda!
+    return 0;
+}
+
+📦 Capture Clause
+Defines which variables from the surrounding scope are accessible inside the lambda.
+
+Capture Syntax	Description
+[ ]	Capture nothing
+[=]	Capture all external variables by value
+[&]	Capture all external variables by reference
+[x]	Capture variable x by value
+[&x]	Capture variable x by reference
+[=, &x]	Capture all by value, but x by reference
+[&, x]	Capture all by reference, but x by value
+
+📍 Example:
+int a = 10, b = 20;
+
+auto sum = [=]() {
+    return a + b; // a and b are captured by value
+};
+
+auto multiply = [&]() {
+    return a * b; // a and b are captured by reference
+};
+
+
+🔁 Lambda with Parameters
+auto add = [](int x, int y) {
+    return x + y;
+};
+
+cout << add(10, 5);  // Output: 15
+
+
+🎯 Lambda with Return Type
+auto divide = [](int a, int b) -> double {
+    return (double)a / b;
+};
+
+If return type is clear, it can be omitted:
+auto square = [](int x) { return x * x; };
+
+
+🔄 Lambda Inside Algorithms
+Lambdas are widely used with STL algorithms like sort, for_each, etc.
+#include <vector>
+#include <algorithm>
+
+int main() {
+    vector<int> v = {5, 3, 9, 1};
+
+    sort(v.begin(), v.end(), [](int a, int b) {
+        return a < b; // ascending sort
+    });
+
+    for_each(v.begin(), v.end(), [](int x) {
+        cout << x << " ";
+    });
+}
+
+
+🔓 Mutable Lambdas
+By default, lambdas that capture by value can't modify captured variables. But you can override that with mutable.
+int x = 10;
+auto change = [=]() mutable {
+    x = 20;  // allowed now
+    cout << x << endl;
+};
+
+change(); // Output: 20
+cout << x; // Output: 10 (original unchanged)
+
+
+🧩 Lambda as Function Argument
+void applyFunction(int x, function<void(int)> func) {
+    func(x);
+}
+
+applyFunction(5, [](int val) {
+    cout << "Value is: " << val << endl;
+});
+
+
+⚙️ Generic Lambda (C++14+)
+auto generic = [](auto x, auto y) {
+    return x + y;
+};
+
+cout << generic(3, 4);     // int
+cout << generic(3.1, 4.5); // double
+
+✅ Use Cases of Lambda Functions
+Custom sorting with std::sort
+Predicate functions with find_if, count_if, etc.
+Callbacks
+Event handling (especially in GUI apps)
+Lightweight function objects
+
+📚 Summary
+Feature	        Description
+Lambda	        An inline anonymous function
+Capture	        Grabs external variables (by value/reference)
+Parameters	    Like normal functions
+Return Type	    Can be auto-deduced or explicitly stated
+Use in STL	    Very powerful with algorithms like sort, for_each, etc.
+Introduced in	C++11 (generic lambdas in C++14)
+
