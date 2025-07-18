@@ -1,0 +1,32 @@
+🔰 What is a Smart Pointer?
+A smart pointer is a class in C++ that wraps a raw pointer and provides automatic memory management. It ensures that the memory is properly released (freed) when it's no longer in use, preventing memory leaks and dangling pointers.
+Smart pointers are part of the C++11 Standard Library (<memory> header).
+
+⚙️ Why Use Smart Pointers?
+✅ Advantages:
+Automatic memory deallocation (RAII — Resource Acquisition Is Initialization)
+Exception safety
+Avoid memory leaks
+Avoid dangling pointers
+Better resource management in complex applications
+
+
+📚 Types of Smart Pointers in C++
+Smart Pointer	        Ownership	            Description
+std::unique_ptr	        Single owner	        Cannot be copied, only moved
+std::shared_ptr	        Shared ownership        Multiple shared_ptrs can own the same object
+std::weak_ptr	        Non-owning reference	Used to break cyclic reference of shared_ptrs
+
+All are defined in the <memory> header.
+
+
+1️⃣ std::unique_ptr
+Only one unique_ptr can own the resource.
+When it goes out of scope, the resource is automatically deleted.
+Cannot be copied, only moved.
+
+
+✅ Syntax:
+#include <memory>
+std::unique_ptr<int> ptr = std::make_unique<int>(10);
+
