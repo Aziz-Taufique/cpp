@@ -1,4 +1,4 @@
-// TOPIC : Types of thred creation.
+// TOPIC : Types of thread creation.
 // There are 5 different types we can create threads using callback objects.
 
 // If you create multiple thread at same time it doesn't guarantee which one will start first.

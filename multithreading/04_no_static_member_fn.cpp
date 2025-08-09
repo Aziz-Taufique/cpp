@@ -1,13 +1,13 @@
+// 4. Non-static member function
+
 #include <iostream>
 #include <thread>
-
-// 3. Create Thread with a Functor (Callable Object)
 class Base
 {
 public:
-    void operator()(int x)
+    void run(int x)
     {
-        while (x > 0)
+        while (x)
         {
             std::cout << x << std::endl;
             x--;
@@ -17,8 +17,8 @@ public:
 
 int main()
 {
-    std::thread t(Base(), 10);
+    Base b;
+    std::thread t(&Base::run, &b, 10);
     t.join();
-
     return 0;
 }

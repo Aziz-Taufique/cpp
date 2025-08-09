@@ -1,0 +1,196 @@
+1. What is Multithreading in C++?
+Multithreading is a programming technique where a single program (process) can execute multiple tasks simultaneously by 
+using multiple threads.
+
+* Thread = smallest unit of execution in a program.
+* Multithreading = running multiple threads concurrently in the same memory space of a process.
+
+Think of it like:
+A restaurant (your program) has one kitchen (process memory), but multiple cooks (threads) working at the same time.
+
+2. Why Use Multithreading?
+✅ Parallelism → Run multiple parts of code simultaneously (e.g., video decoding + UI updates).
+✅ Faster execution → Especially useful for multi-core CPUs.
+✅ Responsive programs → GUI or servers remain responsive while doing background work.
+✅ Better CPU utilization → No core sits idle if work is available.
+
+
+3. How it works in C++
+Since C++11, we have the <thread> library that makes multithreading much easier.
+
+Basic Example:
+#include <iostream>
+#include <thread>
+
+void task1() {
+    std::cout << "Task 1 is running\n";
+}
+
+void task2() {
+    std::cout << "Task 2 is running\n";
+}
+
+int main() {
+    std::thread t1(task1); // Start thread 1
+    std::thread t2(task2); // Start thread 2
+
+    t1.join(); // Wait for t1 to finish
+    t2.join(); // Wait for t2 to finish
+
+    return 0;
+}
+Output (order may vary):
+
+Task 1 is running
+Task 2 is running
+Order can change because threads run independently.
+
+4. Important Concepts in C++ Multithreading
+1 Thread Creation
+Using std::thread with a function, lambda, or callable object.
+
+2. Thread Joining
+join() → Wait for thread to finish before continuing.
+
+3. Thread Detaching
+detach() → Run in background, main thread doesn’t wait.
+
+4. Race Conditions
+Two threads accessing shared data simultaneously can cause unexpected results.
+Solution → Use mutex or other synchronization mechanisms.
+
+5. Synchronization
+std::mutex → Lock critical sections to avoid race conditions.
+std::lock_guard or std::unique_lock → RAII-based locking.
+
+6. Thread Safety
+Shared data must be accessed in a controlled manner.
+
+5. Real-Life Examples
+* Web browsers: Render HTML in one thread, download files in another.
+* Game engines: Physics, rendering, and AI can run in parallel.
+* Servers: Each client connection can be handled by a separate thread.
+
+**********************************************************
+
+# WAYS TO CREATE THREADS.
+1. Functionm Pointers
+2. Lambda Functions
+3. Functors
+4. Member Functions
+5. Static member function.
+
+
+***************************************
+
+1. join()
+Purpose:
+Waits for a thread to finish execution before continuing in the calling thread.
+When you join() a thread, the calling thread blocks until the joined thread completes.
+
+Key Points:
+After join(), the thread object is no longer associated with any thread of execution.
+You can only join() once.
+If you don’t call join() or detach() on a std::thread object before it’s destroyed → program will terminate (std::terminate() called).
+
+2. joinable()
+Purpose:
+Checks whether a std::thread object is associated with an active thread of execution.
+
+Returns:
+true → Thread is still running or joinable.
+false → Thread is not running or already joined/detached or default-constructed.
+
+Why use it?
+To safely decide whether to call join() or detach() (avoids exceptions/termination).
+
+Example:
+#include <iostream>
+#include <thread>
+
+void task() {
+    std::cout << "Running task...\n";
+}
+
+int main() {
+    std::thread t(task);
+
+    if (t.joinable()) { // Prevents joining a non-joinable thread
+        t.join();
+    }
+    std::cout << "Main done.\n";
+}
+
+When joinable() returns false:
+Thread is default constructed: std::thread t;
+Thread is moved from: std::thread t2 = std::move(t1);
+Thread already joined or detached.
+Thread object destroyed.
+
+3. detach()
+Purpose:
+Separates the thread from the std::thread object → thread runs independently in the background ("daemon thread").
+Once detached:
+-> You cannot join it later.
+-> Thread resources are automatically released when it finishes.
+
+Key Points:
+After detach(), the std::thread object becomes not joinable.
+Useful for background tasks where you don’t care about the result.
+Dangerous if the background thread accesses data that goes out of scope → leads to undefined behavior.
+
+
+Example:
+#include <iostream>
+#include <thread>
+#include <chrono>
+
+void backgroundTask() {
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+    std::cout << "Background task done!\n";
+}
+
+int main() {
+    std::thread t(backgroundTask);
+    t.detach(); // Runs in background
+
+    std::cout << "Main finishes early.\n";
+}
+
+Risk:
+If main exits before backgroundTask finishes, the background thread might access destroyed variables → undefined behavior.
+
+4. Side-by-Side Comparison
+Feature	                            join()	                    joinable()	                            detach()
+Purpose	                            Wait for thread to finish	Check if thread can be joined/detached	Let thread run independently
+Blocking	                        Yes	                        No	                                    No
+Can be called multiple times?	    No	                        Yes	                                    No
+Thread object joinable after call?	No	                        –	                                    No
+Common use	                        Wait for results	        Safe check before joining/detaching	    Background processing
+Danger	                            Deadlock if joining self	None                                    Lifetime issues, data races
+
+
+5. Common Pitfalls
+A. Forgetting to join or detach
+std::thread t(work);
+// Destructor of t is called here without join/detach -> std::terminate()!
+
+B. Calling join() twice
+t.join();
+t.join(); // ❌ Undefined behavior / program crash
+
+C. Using detached thread with destroyed data
+void risky(int* ptr) {
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    *ptr = 10; // ❌ if ptr points to destroyed variable
+}
+
+6. Recommended Practice
+std::thread t(func);
+if (t.joinable()) {
+    t.join(); // or t.detach()
+}
+Always check joinable() before join() or detach().
+Prefer join() if you need the result or order guarantee.
+Use detach() only when thread lifetime is truly independent.
+
