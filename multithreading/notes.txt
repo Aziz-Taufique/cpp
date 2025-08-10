@@ -194,3 +194,38 @@ Always check joinable() before join() or detach().
 Prefer join() if you need the result or order guarantee.
 Use detach() only when thread lifetime is truly independent.
 
+
+*******************************************************************************
+
+1. What is std::mutex::try_lock()?
+try_lock() is a non-blocking way to attempt to acquire ownership of a mutex.
+Unlike lock() (which blocks until it acquires the lock), try_lock() immediately returns whether it succeeded or not.
+
+2. Syntax
+bool try_lock();
+
+Return Value
+true → Lock was successfully acquired.
+false → Lock could not be acquired immediately because another thread owns it.
+
+3. How it works
+When you call try_lock():
+If the mutex is unlocked, the calling thread immediately locks it and returns true.
+If the mutex is already locked by another thread (or the same thread for std::mutex), it returns false without blocking.
+It never waits; the call returns instantly.
+
+4. Difference between lock() and try_lock()
+Feature	                lock()	                                        try_lock()
+Blocking	            Yes — waits until lock is available	            No — returns immediately
+Return type	            void	                                        bool
+Usage	                Guaranteed lock acquisition before continuing	Used when you can’t or don’t want to block
+Behavior on contention	Thread goes to sleep until mutex is free	    Thread continues execution if mutex is busy
+
+6. Typical Use Cases
+Avoid blocking in high-performance systems
+In real-time systems, blocking can cause unacceptable delays.
+Try-then-do-something-else strategy
+If the lock is busy, do other work instead of waiting.
+Deadlock avoidance in multiple mutex locking
+Useful when locking multiple mutexes without a strict ordering (paired with retries).
+
