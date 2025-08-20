@@ -12,6 +12,17 @@
 // 5. sizeof
 // 5. typeid
 
+/*
+🔹 Common Overloaded Operators
+Arithmetic: +, -, *, /, %
+Comparison: ==, !=, <, >, <=, >=
+Assignment: =, +=, -=, etc.
+Stream: <<, >>
+Increment/Decrement: ++, --
+Array subscript: []
+Function call: ()
+*/
+
 #include <iostream>
 
 class Point
